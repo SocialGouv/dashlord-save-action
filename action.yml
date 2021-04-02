@@ -51,6 +51,8 @@ runs:
         # due to https://github.com/treosh/lighthouse-ci-action/pull/81
         # copy selected reports
         # todo: summarize multiple runs
+        ls
+        ls lighthouse-results
         if [[ -e "./lighthouse-results" ]]
         then
           for LHR_JSON_PATH in ./lighthouse-results/lhr-*.json; do
