@@ -13,6 +13,7 @@ runs:
       id: init
       run: |
         URL=${{ inputs.url }}
+        HOSTNAME=$(echo "${{ inputs.url }}" | sed -e 's/[^/]*\/\/\([^@]*@\)\?\([^:/]*\).*/\2/')
         DASHLORD_REPO_PATH=${{ github.workspace }};
         # store results in a folder with then base64 encoded url
         URL_BASE64=$(printf "%s" "$URL" | base64)
@@ -20,6 +21,7 @@ runs:
         OUT_PATH="./results/${URL_BASE64}/${NOW}"
 
         echo "URL: $URL"
+        echo "HOSTNAME: $HOSTNAME"
         echo "DASHLORD_REPO_PATH: $DASHLORD_REPO_PATH"
         echo "NOW: $NOW"
         echo "URL base 64: $URL_BASE64"
@@ -30,6 +32,7 @@ runs:
         mkdir -p $OUT_PATH || true
 
         ls -la
+        ls -la scans
 
         # filter and jsonify nuclei logs
         if [[ -e "scans/nuclei.log" ]]
@@ -37,6 +40,15 @@ runs:
           cat scans/nuclei.log | jq -s > scans/nuclei.json || true
           rm scans/nuclei.log || true
         fi
+
+        # rename testssl.sh reports
+        # html, json, csv
+        for TESTSSL_PATH in "./scans/${HOSTNAME}_p*"; do
+          echo "TESTSSL_PATH: $TESTSSL_PATH"
+          EXTENSION=`sed 's/^\w\+.//' <<< "$TESTSSL_PATH"`
+          echo $EXTENSION
+          mv $TESTSSL_PATH ./scans/testssl.${EXTENSION}
+        done
 
         # archive results in dedicated folder
         mv scans/* $OUT_PATH/ || true
@@ -57,7 +69,6 @@ runs:
         # due to https://github.com/treosh/lighthouse-ci-action/pull/81
         # copy selected reports
         # todo: summarize multiple runs
-        ls
         if [[ -e "./.lighthouseci" ]]
         then
           for LHR_JSON_PATH in ./.lighthouseci/lhr-*.json; do
