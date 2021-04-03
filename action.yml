@@ -9,7 +9,7 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - shell: bash
+    - shell: sh
       run: |
         URL=${{ inputs.url }}
         HOSTNAME=$(echo "${{ inputs.url }}" | sed -e 's/[^/]*\/\/\([^@]*@\)\?\([^:/]*\).*/\2/')
@@ -20,17 +20,16 @@ runs:
         OUT_PATH="./results/${URL_BASE64}/${NOW}"
 
         echo "URL: $URL"
+        echo "URL base 64: $URL_BASE64"
         echo "HOSTNAME: $HOSTNAME"
         echo "DASHLORD_REPO_PATH: $DASHLORD_REPO_PATH"
         echo "NOW: $NOW"
-        echo "URL base 64: $URL_BASE64"
         echo "OUT_PATH: $OUT_PATH"
 
         cd $DASHLORD_REPO_PATH
 
         mkdir -p $OUT_PATH || true
 
-        ls -la
         ls -la scans
 
         # filter and jsonify nuclei logs
@@ -50,18 +49,9 @@ runs:
         # archive results in dedicated folder
         mv scans/* $OUT_PATH/ || true
 
-        if [[ -e "report_json.json" ]]
-        then
-          mv report_json.json $OUT_PATH/zap.json
-        fi
-        if [[ -e "report_md.md" ]]
-        then
-          mv report_md.md $OUT_PATH/zap.md
-        fi
-        if [[ -e "report_html.html" ]]
-        then
-          mv report_html.html $OUT_PATH/zap.html
-        fi
+        mv report_json.json $OUT_PATH/zap.json || true
+        mv report_md.md $OUT_PATH/zap.md || true
+        mv report_html.html $OUT_PATH/zap.html || true
 
         # due to https://github.com/treosh/lighthouse-ci-action/pull/81
         # copy selected reports
