@@ -32,29 +32,31 @@ runs:
 
         ls -la scans
 
-        # filter and jsonify nuclei logs
+        ###### filter and jsonify nuclei logs ######
         if [[ -e "scans/nuclei.log" ]]
         then
           cat scans/nuclei.log | jq -s > scans/nuclei.json || true
           rm scans/nuclei.log || true
         fi
 
-        # rename testssl.sh reports
+        ###### rename testssl.sh reports ######
         # html, json, csv
         for TESTSSL_PATH in ./scans/${HOSTNAME}_p*; do
           EXTENSION=$(echo "$TESTSSL_PATH" | sed 's/^.*\.//')
           mv $TESTSSL_PATH ./scans/testssl.${EXTENSION} || true
         done
 
-        # archive results in dedicated folder
+        ###### archive results in repo folder ######
         mv scans/* $OUT_PATH/ || true
 
         mv report_json.json $OUT_PATH/zap.json || true
         mv report_md.md $OUT_PATH/zap.md || true
         mv report_html.html $OUT_PATH/zap.html || true
 
-        # copy reports
-        # todo: summarize multiple runs
+        ###### copy LHR reports ######
+
+        # todo: summarize multiple LHR runs
+        # if multiple scans detected we dont want to duplicate the whole data, do we ?
 
         # https://stackoverflow.com/a/29438087/174027
         shopt -s nullglob
