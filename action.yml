@@ -9,7 +9,7 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - shell: sh
+    - shell: bash
       run: |
         URL=${{ inputs.url }}
         HOSTNAME=$(echo "${{ inputs.url }}" | sed -e 's/[^/]*\/\/\([^@]*@\)\?\([^:/]*\).*/\2/')
@@ -53,19 +53,18 @@ runs:
         mv report_md.md $OUT_PATH/zap.md || true
         mv report_html.html $OUT_PATH/zap.html || true
 
-        # due to https://github.com/treosh/lighthouse-ci-action/pull/81
-        # copy selected reports
+        # copy reports
         # todo: summarize multiple runs
+
+        # https://stackoverflow.com/a/29438087/174027
+        shopt -s nullglob
+
         if [[ -e "./.lighthouseci" ]]
         then
-          for LHR_JSON_PATH in ./.lighthouseci/lhr-*.json; do
-              LHR_URL=$(jq -r ".requestedUrl" $LHR_JSON_PATH)
-              if [[ "${URL%/}" == "${LHR_URL%/}" ]]
-              then
-                  LHR_TIMESTAMP=$(basename $LHR_JSON_PATH | sed -e "s/lhr-\([0-9]*\)\.json/\1/")
-                  mv .lighthouseci/lhr-${LHR_TIMESTAMP}.json $OUT_PATH/lhr.json
-                  mv .lighthouseci/lhr-${LHR_TIMESTAMP}.html $OUT_PATH/lhr.html
-              fi
-          done
+            for LHR_JSON_PATH in ./.lighthouseci/lhr-*.json; do
+                LHR_TIMESTAMP=$(basename $LHR_JSON_PATH | sed -e "s/lhr-\([0-9]*\)\.json/\1/")
+                mv .lighthouseci/lhr-${LHR_TIMESTAMP}.json $OUT_PATH/lhr.json
+                mv .lighthouseci/lhr-${LHR_TIMESTAMP}.html $OUT_PATH/lhr.html
+            done
         fi
       
