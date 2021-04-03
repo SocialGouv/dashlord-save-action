@@ -43,9 +43,7 @@ runs:
         # rename testssl.sh reports
         # html, json, csv
         for TESTSSL_PATH in ./scans/${HOSTNAME}_p*; do
-          echo "TESTSSL_PATH: $TESTSSL_PATH"
           EXTENSION=$(echo "$TESTSSL_PATH" | sed 's/^.*\.//')
-          echo $EXTENSION
           mv $TESTSSL_PATH ./scans/testssl.${EXTENSION}
         done
 
