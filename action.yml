@@ -49,9 +49,9 @@ runs:
         ###### archive results in repo folder ######
         mv scans/* $OUT_PATH/ || true
 
-        mv report_json.json $OUT_PATH/zap.json || true
-        mv report_md.md $OUT_PATH/zap.md || true
-        mv report_html.html $OUT_PATH/zap.html || true
+        mv report_json.json "$OUT_PATH/zap.json" || true
+        mv report_md.md "$OUT_PATH/zap.md" || true
+        mv report_html.html "$OUT_PATH/zap.html" || true
 
         ###### copy LHR reports ######
 
@@ -65,8 +65,8 @@ runs:
         then
             for LHR_JSON_PATH in ./.lighthouseci/lhr-*.json; do
                 LHR_TIMESTAMP=$(basename $LHR_JSON_PATH | sed -e "s/lhr-\([0-9]*\)\.json/\1/")
-                mv .lighthouseci/lhr-${LHR_TIMESTAMP}.json $OUT_PATH/lhr.json
-                mv .lighthouseci/lhr-${LHR_TIMESTAMP}.html $OUT_PATH/lhr.html
+                mv .lighthouseci/lhr-${LHR_TIMESTAMP}.json "$OUT_PATH/lhr.json"
+                mv .lighthouseci/lhr-${LHR_TIMESTAMP}.html "$OUT_PATH/lhr.html"
             done
         fi
       
