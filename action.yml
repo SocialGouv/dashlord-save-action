@@ -44,7 +44,7 @@ runs:
         # html, json, csv
         for TESTSSL_PATH in ./scans/${HOSTNAME}_p*; do
           EXTENSION=$(echo "$TESTSSL_PATH" | sed 's/^.*\.//')
-          mv $TESTSSL_PATH ./scans/testssl.${EXTENSION}
+          mv $TESTSSL_PATH ./scans/testssl.${EXTENSION} || true
         done
 
         # archive results in dedicated folder
