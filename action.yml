@@ -15,7 +15,7 @@ runs:
         HOSTNAME=$(echo "${{ inputs.url }}" | sed -e 's/[^/]*\/\/\([^@]*@\)\?\([^:/]*\).*/\2/')
         DASHLORD_REPO_PATH=${{ github.workspace }};
         # store results in a folder with then base64 encoded url
-        URL_BASE64=$(printf "%s" "$URL" | base64)
+        URL_BASE64=$(printf "%s" "$URL" | base64 -b 500) # -b 500 because it could be truncated
         NOW=$(date +"%Y%m%d_%H%M%S")
         OUT_PATH="./results/${URL_BASE64}/${NOW}"
 
