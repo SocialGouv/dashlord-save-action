@@ -53,6 +53,9 @@ runs:
         mv report_md.md $OUT_PATH/zap.md || true
         mv report_html.html $OUT_PATH/zap.html || true
 
+        ###### put screenshot if any ######
+        mv screenshot.png $OUT_PATH/screenshot.png || true
+
         ###### copy LHR reports ######
 
         # todo: summarize multiple LHR runs
