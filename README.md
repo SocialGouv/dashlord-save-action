@@ -1,3 +1,9 @@
+# deprecated
+
+## see https://github.com/SocialGouv/dashlord
+
+---
+
 # socialgouv/dashlord-save-action
 
 Save results from various URL scanners into a single folder for DashLord
